@@ -16,8 +16,24 @@ class Game extends React.Component {
     keep: [], 
   }
 
+  toggleKept = (i) => {
+    const { keep } = this.state;
+    let updatedKeep;
+
+    if (keep.includes(i))
+      updatedKeep = keep.filter( k => k !== i )
+    else
+      updatedKeep = [...keep, i]
+
+    this.setState({ keep: updatedKeep })
+  }
+
   rollDice = () => {
+    const { keep } = this.state;
+
     const dice = this.state.dice.map( (el, i) => {
+      if (keep.includes(i))
+        return el
       return Math.floor(Math.random() * 6) + 1
     });
 
@@ -27,7 +43,7 @@ class Game extends React.Component {
   }
 
   render() {
-    const { roll, dice } = this.state;
+    const { roll, dice, keep } = this.state;
 
     return (
       <Grid>
@@ -40,6 +56,8 @@ class Game extends React.Component {
               roll={roll}
               dice={dice}
               rollDice={this.rollDice}
+              keep={keep}
+              toggleKept={this.toggleKept}
             />
           </Grid.Column>
           <Grid.Column
