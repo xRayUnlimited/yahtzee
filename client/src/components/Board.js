@@ -3,15 +3,25 @@ import {
   Grid, 
   Button, 
   Divider, 
+  Header,
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { rollDice } from '../actions/currentGame';
 import Dice from './Dice'
 
+const calcScore = (scores) => {
+  return scores
+    .map( s => s.score )
+    .reduce( (total, score) => {
+      return total + score
+    },0)
+}
+
 const Board = ({ 
   roll, 
   dice, 
   keep,
+  scores,
   dispatch,
 }) => {
   const maxRoll = roll === 3;
@@ -43,16 +53,24 @@ const Board = ({
             })
           }
       </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <Header textAlign="center">
+            Total: { calcScore(scores) }
+          </Header>
+        </Grid.Column>
+      </Grid.Row>
     </Grid>
   )
 }
 
 const mapStateToProps = (state) => {
-  const { roll, dice, keep } = state.currentGame;
+  const { roll, dice, keep, scores } = state.currentGame;
   return {
     roll,
     dice,
     keep,
+    scores,
   }
 }
 
