@@ -2,7 +2,7 @@ class Api::ScoresController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @scores = Score.order(value: :desc).limit(10)
+    @scores = Score.all_scores
   end
 
   def create

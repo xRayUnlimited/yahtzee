@@ -48,6 +48,6 @@ export const validateToken = (cb = () => {}) => {
   }
 }
 
-const user = (data, header) => {
-  return { type: LOGIN, user: data, headers }
+const user = (res, headers) => {
+  return { type: LOGIN, user: res.data, headers }
 }

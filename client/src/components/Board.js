@@ -6,7 +6,7 @@ import {
   Header,
 } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { rollDice, newGame } from '../actions/currentGame';
+import { rollDice, newGame, postScore } from '../actions/currentGame';
 import Dice from './Dice'
 
 class Board extends React.Component {
@@ -20,8 +20,11 @@ class Board extends React.Component {
         gameOver = false
     })
 
-    if (gameOver && !this.state.gameOver)
+    if (gameOver && !this.state.gameOver) {
+      const score = this.calcScore();
+      this.props.dispatch(postScore(score))
       this.setState({ gameOver })
+    }
   }
 
   calcScore = () => {

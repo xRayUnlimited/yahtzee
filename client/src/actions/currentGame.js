@@ -1,8 +1,18 @@
+import axios from 'axios'
 export const ROLL_DICE = 'ROLL_DICE';
 export const TOGGLE_KEPT = 'TOGGLE_KEPT';
 export const UPDATE_SCORE = 'UPDATE_SCORE';
 export const RESET_ROLL = 'RESET_ROLL';
 export const NEW_GAME = 'NEW_GAME';
+
+export const postScore = (value) => {
+  return (dispatch) => {
+    axios.post('/api/scores', { score: { value }})
+      .then( ({ headers }) => {
+        dispatch({ type: 'HEADERS', headers })
+      })
+  }
+}
 
 export const newGame = () => {
   return { type: NEW_GAME }

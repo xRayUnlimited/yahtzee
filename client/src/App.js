@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
-import Game from './components/Game'
 import { 
   ProtectedRoute,
   Login,
@@ -14,6 +13,8 @@ import {
   logout,
   validateToken,
 } from './actions/auth';
+import Game from './components/Game'
+import Scores from './components/Scores'
 
 const App = () => (
   <div>
@@ -24,6 +25,11 @@ const App = () => (
           exact 
           path="/"
           component={Game}
+        />
+        <ProtectedRoute
+          exact
+          path="/scores"
+          component={Scores}
         />
         <Route
           exact
