@@ -3,8 +3,11 @@ class Api::ScoresController < ApplicationController
 
   def index
     scores = Score.page(params[:page]).all_scores
-    total_page = scores.total_pages
-    render json: { scores: scores, total_pages: total_pages }
+    total_pages = scores.total_pages
+    render json: { 
+      scores: scores, 
+      total_pages: total_pages 
+    }
   end
 
   def create

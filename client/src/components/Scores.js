@@ -7,14 +7,33 @@ import {
   List,
   Container,
 } from 'semantic-ui-react';
+import InfiniteScroll from 'react-infinite-scroll';
 
 class Scores extends React.Component {
-  state = { scores: [] }
+  state = { scores: [], totalPages: 0, page: 1 }
 
   componentDidMount() {
-    axios.get('/api/scores')
+    axios.get(`/api/scores?page=${this.state.page}`)
       .then( ({ data, headers }) => {
-        this.setState({ scores: data })
+        this.setState({ 
+          scores: data.scores,
+          totalPages: data.total_pages
+        })
+        this.props.dispatch({ type: 'HEADERS', headers })
+      })
+  }
+
+  loadMore = () => { 
+    const page = this.state.page + 1
+    axios.get(`/api/scores?page=${page}`)
+      .then( ({ data, headers }) => {
+        this.setState( state => {
+          return {
+            scores: [...this.state.scores, ...data.scores],
+            page: state.page + 1
+          }
+        })
+
         this.props.dispatch({ type: 'HEADERS', headers })
       })
   }
