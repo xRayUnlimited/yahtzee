@@ -16,9 +16,17 @@ import {
 import Game from './components/Game'
 import Scores from './components/Scores'
 
+const authRoutes = [
+  { url: '/', text: 'Play Yahtzee' },
+  { url: '/scores', text: 'Scores' },
+]
+
 const App = () => (
   <div>
-    <NavBar handleLogout={logout} />
+    <NavBar 
+      authRoutes={authRoutes}
+      handleLogout={logout} 
+    />
     <FetchUser validateToken={validateToken}>
       <Switch>
         <ProtectedRoute 
