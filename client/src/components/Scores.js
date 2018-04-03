@@ -7,61 +7,80 @@ import {
   List,
   Container,
 } from 'semantic-ui-react';
-import InfiniteScroll from 'react-infinite-scroll';
+import InfiniteScroll from 'react-infinite-scroller';
+
+const styles = {
+  scroller: { height: '60vh', overflow: 'auto' },
+};
 
 class Scores extends React.Component {
-  state = { scores: [], totalPages: 0, page: 1 }
+  state = { scores: [], total_pages: 0, page: 1 };
 
   componentDidMount() {
-    axios.get(`/api/scores?page=${this.state.page}`)
-      .then( ({ data, headers }) => {
-        this.setState({ 
+    axios
+      .get(`/api/scores?page=${this.state.page}`)
+      .then(({ data, headers }) => {
+        this.setState({
           scores: data.scores,
-          totalPages: data.total_pages
-        })
-        this.props.dispatch({ type: 'HEADERS', headers })
-      })
+          totalPages: data.total_pages,
+        });
+        this.props.dispatch({
+          type: 'HEADERS',
+          headers,
+        });
+      });
   }
 
-  loadMore = () => { 
-    const page = this.state.page + 1
-    axios.get(`/api/scores?page=${page}`)
-      .then( ({ data, headers }) => {
-        this.setState( state => {
+  loadMore = () => {
+    const page = this.state.page + 1;
+    axios
+      .get(`/api/scores?page=${page}`)
+      .then(({ data, headers }) => {
+        this.setState((state) => {
           return {
-            scores: [...this.state.scores, ...data.scores],
-            page: state.page + 1
-          }
-        })
+            scores: [
+              ...this.state.scores,
+              ...data.scores,
+            ],
+            page: state.page + 1,
+          };
+        });
 
-        this.props.dispatch({ type: 'HEADERS', headers })
-      })
-  }
+        this.props.dispatch({
+          type: 'HEADERS',
+          headers,
+        });
+      });
+  };
 
   render() {
-    const { scores } = this.state
+    const { scores, page, totalPages } = this.state;
     return (
       <Container>
         <Header as="h2" textAlign="center">
           Scores
         </Header>
-        <List divided>
-          { scores.map( s => 
+        <List divided style={styles.scroller}>
+          <InfiniteScroll
+            pageStart={page}
+            loadMore={this.loadMore}
+            hasMore={page < totalPages}
+            useWindow={false}>
+            {scores.map((s) => (
               <List.Item key={s.id}>
                 <List.Content>
                   <List.Header>{s.score}</List.Header>
                   <List.Description>
-                    { s.email }
+                    {s.email}
                   </List.Description>
                 </List.Content>
               </List.Item>
-            )
-          }
+            ))}
+          </InfiniteScroll>
         </List>
       </Container>
-    )
-
+    );
   }
 }
 
-export default connect()(Scores)
+export default connect()(Scores);
